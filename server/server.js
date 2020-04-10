@@ -1,6 +1,6 @@
 const express = require('express');
 
-// const user = require('./controller/user.controller');
+const user = require('./controller/user.controller');
 // const pokemon = require('./controller/pokemon.controller');
 // const item = require('./controller/items.controller');
 
@@ -11,7 +11,7 @@ const mongoose = require('mongoose');
 
 // This is the default address for MongoDB.
 // Make sure MongoDB is running!
-const mongoEndpoint = 'mongodb://127.0.0.1/airline_app';
+const mongoEndpoint = process.env.MONGODB_URI || 'mongodb://127.0.0.1/airline_app';
 // useNewUrlParser is not required, but the old parser is deprecated
 mongoose.connect(mongoEndpoint, { useNewUrlParser: true });
 
@@ -29,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 // to distinguish them from frontend routes
 
 // app.use('/api/pokemon', pokemon);
-// app.use('/api/user', user);
+app.use('/api/user', user);
 // app.use('/api/items', item);
 
 app.listen(3001, function() {
