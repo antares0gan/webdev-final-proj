@@ -18,8 +18,11 @@ function getUserByUserName(username) {
   return UserModel.findOne({username: username}).exec();
 }
 
-function updateUser(username, update) {
-  return UserModel.update({username: username}, update).exec();
+function updateUser(username, ticket) {
+  console.log(ticket);
+  return UserModel.updateOne(
+    {username: username}, 
+    {$push: {tickets: ticket}}).exec();
 }
 
 // select all
