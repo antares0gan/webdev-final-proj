@@ -19,7 +19,6 @@ function getUserByUserName(username) {
 }
 
 function updateUser(username, ticket) {
-  console.log(ticket);
   return UserModel.updateOne(
     {username: username}, 
     {$push: {tickets: ticket}}).exec();
