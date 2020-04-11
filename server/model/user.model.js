@@ -18,6 +18,10 @@ function getUserByUserName(username) {
   return UserModel.findOne({username: username}).exec();
 }
 
+function updateUser(username, update) {
+  return UserModel.update({username: username}, update).exec();
+}
+
 // select all
 function getAllUsers() {
   return UserModel.find().exec();
@@ -28,4 +32,5 @@ module.exports = {
   addUser,
   getUserByUserName,
   getAllUsers,
+  updateUser,
 };

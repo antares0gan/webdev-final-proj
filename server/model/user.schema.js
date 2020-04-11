@@ -4,8 +4,15 @@ const bcrypt = require('bcryptjs');
 // schema defines what data looks like in database
 // via mongoose, it can take a schema and translate to model
 const UserSchema = new Schema({
-  username: { type: String, index: true },
+  username: { type: String, index: { unique: true} },
   password: String,
+  tickets: [{
+    depature: String,
+    arrival: String,
+    date: String,
+    depTime: String,
+    arrTime: String
+  }]
 }, { collection : 'users' });
 
 // Save is a MongoDB API, that is called by 'create'

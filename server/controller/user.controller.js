@@ -42,4 +42,15 @@ router.post('/authenticate', function (req, res) {
 router.get('/', (req, res) => UserModel.getAllUsers()
   .then(users => res.send(users)));
 
+// update a user with update info provided,
+// used to update tickets list when list changes
+// username in param, req body consists only tickets
+router.put('/:username', (req, res) => {
+  UserModel.updateUser(req.params.username, req.body)
+    .then((user) => {
+      return res.status(200).send(user)
+    },
+    error => res.status(500).send(error))
+});
+
 module.exports = router;

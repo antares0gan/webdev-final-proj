@@ -17,6 +17,7 @@ mongoose.connect(mongoEndpoint, { useNewUrlParser: true });
 
 // Get the connection string
 const db = mongoose.connection;
+// db.dropDatabase();
 
 // This will create the connection, and throw an error if it doesn't work
 db.on('error', console.error.bind(console, 'Error connecting to MongoDB:'));
