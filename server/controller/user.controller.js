@@ -3,35 +3,55 @@ const express = require('express');
 const router = express.Router();
 
 const UserModel = require('../model/user.model');
-// import bcrypt
-const bcrypt = require("bcryptjs");
 
+const jwt = require('jsonwebtoken');
+const authParser = require('../middleware/middleware_auth.middleware');
 
 router.post('/', (req, res) => {
-  if(!req.body.username || !req.body.password) {
+  const {username, password} = req.body;
+  if(!username || !password) {
     return res.status(404).send({message: "Must include username AND password"});
   }
-
-  // req.body.password = bcrypt.hashSync(req.body.password, 10);
-
   return UserModel.addUser(req.body)
     .then(
       (user) => {
-      // console.dir(user);
-      return res.status(200).send(user)
+        // instead of response user info, we create a token with username,
+        // then we can use this token in request every time, by decoding
+        // and comparing with username from request, we know if it has auth
+        const payload = {username};
+        const token = jwt.sign(payload, process.env.REACT_APP_MY_SECRET, {
+          expiresIn: '14d' // optional cookie expiration date
+        });
+        // Here we are setting the cookie on our response obect.
+        // Note that we are returning the username, but that isn't as necessary anymore
+        // unless we want to reference that on the frontend
+        return res.cookie('token', token, {httpOnly: true})
+          .status(200).send({username});
       },
       error => res.status(500).send(error)
     );
 });
 
 router.post('/authenticate', function (req, res) {
-  UserModel.getUserByUserName(req.body.username)
+  const {username, password} = req.body;
+  UserModel.getUserByUserName(username)
     .then((user) => {
       // Notice that we're not using bcrypt directly anywhere in the controller.
       // All of that behavior is getting handled closer to the database level/layer
-      user.comparePassword(req.body.password, (error, match) => {
+      user.comparePassword(password, (error, match) => {
         if (match) {
-          res.send(user);
+          const payload = {username};
+          // JWT is encrypting our payload (which is whatever data we want
+          // to carry across sessions: in this case, just the username)
+          // into the cookie based on our SECRET
+          const token = jwt.sign(payload, process.env.REACT_APP_MY_SECRET, {
+            expiresIn: '14d' // optional cookie expiration date
+          });
+          // Here we are setting the cookie on our response obect.
+          // Note that we are returning the username, but that isn't as necessary anymore
+          // unless we want to reference that on the frontend
+          return res.cookie('token', token, {httpOnly: true})
+            .status(200).send({username});
         }
         return res.status(400).send("The password does not match");
       });
@@ -40,13 +60,32 @@ router.post('/authenticate', function (req, res) {
 });
 
 router.get('/', (req, res) => UserModel.getAllUsers()
-  .then(users => res.send(users)));
+  .then(users => res.send(users))
+);
 
-// update a user with update info provided,
-// used to update tickets list when list changes
-// username in param, req body consists only tickets
-router.put('/:username', (req, res) => {
-  UserModel.updateUser(req.params.username, req.body)
+// this is used to redirect, we call loggedIn to see
+// if token is valid, if it passes authParser, we know
+// it's valid, we can continue, if it fails, we redirect to
+// login
+router.get('/loggedIn', authParser, function(req, res) {
+  return res.sendStatus(200);
+})
+
+// used to update tickets, where req consists username and ticketslist
+// req.body = {username, tickets}
+router.put('/updateTickets', authParser, (req, res) => {
+  const {username, tickets} = req.body;
+  UserModel.updateUser(username, {"tickets" : tickets})
+    .then((res) => {
+      return res.status(200).send(res)
+    },
+    error => res.status(500).send(error))
+});
+
+// get tickets of a user, req body has user name
+router.get('/getTickets', authParser, (req, res) => {
+  const {username} = req.body; // since auth parser involved, not really need user
+  UserModel.getUserByUserName(username)
     .then((user) => {
       return res.status(200).send(user)
     },

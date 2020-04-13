@@ -17,9 +17,8 @@ const UserSchema = new Schema({
 
 // Save is a MongoDB API, that is called by 'create'
 UserSchema.pre("save", function(next) {
-  // this logic below allows us to protect the password
-  // in the case of a user update, but
-  // where the password
+  // this is used by create, after create it encrypts password and pass
+  // to next stage
   if(!this.isModified("password")) {
     return next();
   }
@@ -28,6 +27,7 @@ UserSchema.pre("save", function(next) {
 });
 
 UserSchema.methods.comparePassword = function(plaintext, callback) {
+  // this is used by auth, it takes raw password, doing encryption and compare
   return callback(null, bcrypt.compareSync(plaintext, this.password));
 };
 

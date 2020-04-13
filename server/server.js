@@ -5,7 +5,7 @@ const user = require('./controller/user.controller');
 // const item = require('./controller/items.controller');
 
 const app = express();
-
+const cookieParse = require('cookie-parser')
 const mongoose = require('mongoose');
 
 
@@ -22,7 +22,7 @@ const db = mongoose.connection;
 // This will create the connection, and throw an error if it doesn't work
 db.on('error', console.error.bind(console, 'Error connecting to MongoDB:'));
 
-
+app.use(cookieParse());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
