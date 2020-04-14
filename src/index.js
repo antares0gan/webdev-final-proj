@@ -2,9 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {createStore, applyMiddleware} from "redux";
 import {Provider} from "react-redux";
-import reducers from './reducers';
+import reducers from './reducers/reducer.js';
 // import Welcome from "./components/welcome.component";
 import thunkMiddleware from 'redux-thunk';
+import Login from './Login.js'
+import Registration from './Registration.js'
 import {
     BrowserRouter, Switch,
     Route, Redirect, Link
@@ -16,22 +18,17 @@ import {
 
 const userStore = createStore(reducers, applyMiddleware(thunkMiddleware));
 
-// ReactDOM.render(
-//   <Provider store={userStore}>
-//     <BrowserRouter>
-//     <Link to={'/login'}>Login</Link>&nbsp;
-//     <Link to={'/register'}>Register</Link>
-//       <Switch>
-//         <Route path="/welcome" component={Welcome}/>
-//         <Route path="/login" component={UserLogin}/>
-//         <Route path="/register" component={Register}/>
-//         <Route path="/pokemon" component={LoggedInComponent(Pokemons)}/>
-//         <Redirect exact from="/" to="login"/>
-//       </Switch>
-//     </BrowserRouter>
-//   </Provider>,
-
-//   document.getElementById('root')
-// );
-
-ReactDOM.render(<div>hello</div>, document.getElementById('root'));
+ReactDOM.render(
+<Provider store={userStore}>
+     <BrowserRouter>
+       <Switch>
+            {/*<Route path="/welcome" component={Welcome}/>
+            <Route path="/login" component={UserLogin}/>
+            <Route path="/register" component={Register}/>*/}
+            <Route exact path="/login" component={Login}/>
+            <Route exact path="/registration" component={Registration}/>
+            <Route render={() => <h1>Not found!</h1>} />
+       </Switch>
+     </BrowserRouter>
+   </Provider>, document.getElementById('root')
+)
