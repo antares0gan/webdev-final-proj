@@ -7,11 +7,15 @@ const UserSchema = new Schema({
   username: { type: String, index: { unique: true} },
   password: String,
   tickets: [{
-    depature: String,
-    arrival: String,
-    date: String,
-    depTime: String,
-    arrTime: String
+    departure: String,  // airport name
+    arrival: String,    // airport name
+    depCode: String,    // airport code
+    arrCode: String,    // airport code
+    date: String,       // yyyy-mm-dd
+    depTime: String,    // xx:yy
+    arrTime: String,    // xx:yy
+    flightNumber: String,  // GH0000
+    aircraft: String,   // TBD or B744
   }]
 }, { collection : 'users' });
 

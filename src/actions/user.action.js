@@ -6,10 +6,9 @@ function loginAttempt() {
   }
 }
 
-function loginSuccess(username, page) {
+function loginSuccess(username) {
   return {
     type: "LOGIN_SUCCESS",
-    target: page,
     username
   }
 }
@@ -27,10 +26,9 @@ function registerAttempt() {
   }
 }
 
-function registerSuccess(username, page) {
+function registerSuccess(username) {
   return {
     type: "REGISTER_SUCCESS",
-    target: page,
     username
   }
 }
@@ -61,23 +59,23 @@ export function clear() {
   }
 }
 
-export function login(user, page) {
+export function login(user) {
   return function (dispatch) {
     dispatch(loginAttempt());
     return Axios.post('/api/user/authenticate', user)
-      .then(response => dispatch(loginSuccess(response.data.username, page)),
+      .then(response => dispatch(loginSuccess(response.data.username)),
         error => dispatch(loginFailure(error.response.data))
     );
   }
 }
 
-export function register(username, password, page) {
+export function register(username, password) {
   return function (dispatch) {
     dispatch(registerAttempt());
     return Axios.post('/api/user/', {username, password})
       .then(response => {
         console.dir(response.data);
-        dispatch(registerSuccess(response.data.username, page))
+        dispatch(registerSuccess(response.data.username))
         },
         error => dispatch(registerFailure(error.response.data.message))
       );
