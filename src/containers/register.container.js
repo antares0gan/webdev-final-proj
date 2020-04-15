@@ -2,6 +2,8 @@ import React from "react";
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
 import {Link} from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { clear, register, validate } from '../actions/user.action';
 import CustomizedNavbar from '../components/navbar.component';
@@ -44,12 +46,17 @@ class Register extends React.Component {
 
     let error;
     if (this.props.error || this.props.valid.message) {
-      error = (<h3>{this.props.error || this.props.valid.message}</h3>)
+      error = (
+        this.props.error || this.props.valid.message
+      )
+      toast(error);
+      this.props.clear();
     }
 
     return (
       <div>
         <CustomizedNavbar></CustomizedNavbar>
+        <ToastContainer hideProgressBar position="bottom-center" autoClose={3000}/>
         <div class="container-fluid">
           <div class="row no-gutter">
             <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image"></div>

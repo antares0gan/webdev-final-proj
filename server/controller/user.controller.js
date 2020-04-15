@@ -28,7 +28,7 @@ router.post('/', (req, res) => {
         return res.cookie('token', token, {httpOnly: true})
           .status(200).send({username});
       },
-      error => res.status(500).send(error)
+      error => res.status(400).send("User already exist")   // most likely error, can be other reason in databse
     );
 });
 
@@ -38,6 +38,9 @@ router.post('/authenticate', function (req, res) {
     .then((user) => {
       // Notice that we're not using bcrypt directly anywhere in the controller.
       // All of that behavior is getting handled closer to the database level/layer
+      if (user === null) {
+        return res.status(400).send("The user does not exist");
+      }
       user.comparePassword(password, (error, match) => {
         if (match) {
           const payload = {username};

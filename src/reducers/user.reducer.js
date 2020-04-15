@@ -25,6 +25,7 @@ function error(state = '', action) {
       return action.error;
     case 'LOGIN_ATTEMPT':
     case 'REGISTER_ATTEMPT':
+    case 'CLEAR':
       return '';
     default:
       return state;

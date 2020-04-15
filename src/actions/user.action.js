@@ -77,7 +77,10 @@ export function register(username, password) {
         console.dir(response.data);
         dispatch(registerSuccess(response.data.username))
         },
-        error => dispatch(registerFailure(error.response.data.message))
+        error => {
+          console.log(error);
+          dispatch(registerFailure(error.response.data))
+        }
       );
   }
 }
