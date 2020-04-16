@@ -74,23 +74,35 @@ router.get('/loggedIn', authParser, function(req, res) {
   return res.sendStatus(200);
 })
 
-// used to update tickets, where req consists username and ticketslist
-// req.body = {username, tickets}
-router.put('/updateTickets', authParser, (req, res) => {
-  const {username, tickets} = req.body;
-  UserModel.updateUser(username, {"tickets" : tickets})
-    .then((res) => {
-      return res.status(200).send(res)
+// to add ticket, ticket is an object
+router.post('/addTicket', authParser, (req, res) => {
+  let username = req.username;
+  const {ticket} = req.body;
+  UserModel.addTicket(username, ticket)
+    .then((response) => {
+      return res.status(200).send(ticket)
+    },
+    error => res.status(500).send(error))
+});
+
+// delete ticket based on id, id has to be acquired by frontend
+router.delete('/deleteTicket/:ticketId', authParser, (req, res) => {
+  let username = req.username;
+  const ticketId = req.params.ticketId;
+  UserModel.deleteTicket(username, ticketId)
+    .then((response) => {
+      return res.status(200).send(ticketId)
     },
     error => res.status(500).send(error))
 });
 
 // get tickets of a user, req body has user name
 router.get('/getTickets', authParser, (req, res) => {
-  const {username} = req.body; // since auth parser involved, not really need user
+  let username = req.username; // since auth parser involved, not really need user
   UserModel.getUserByUserName(username)
     .then((user) => {
-      return res.status(200).send(user)
+      let arr = user.tickets;
+      return res.status(200).send(arr)
     },
     error => res.status(500).send(error))
 });

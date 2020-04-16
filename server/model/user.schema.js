@@ -4,18 +4,19 @@ const bcrypt = require('bcryptjs');
 // schema defines what data looks like in database
 // via mongoose, it can take a schema and translate to model
 const UserSchema = new Schema({
-  username: { type: String, index: { unique: true} },
+  username: { type: String, index: { unique: true } },
   password: String,
   tickets: [{
-    departure: String,  // airport name
-    arrival: String,    // airport name
     depCode: String,    // airport code
     arrCode: String,    // airport code
-    date: String,       // yyyy-mm-dd
     depTime: String,    // xx:yy
     arrTime: String,    // xx:yy
+    depAirport: String,  // airport name
+    arrAirport: String,    // airport name
     flightNumber: String,  // GH0000
     aircraft: String,   // TBD or B744
+    date: String,       // yyyy-mm-dd
+    price: String       // $ xxx
   }]
 }, { collection : 'users' });
 

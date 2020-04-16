@@ -18,9 +18,13 @@ function getUserByUserName(username) {
   return UserModel.findOne({username: username}).exec();
 }
 
-function updateUser(username, update) {
-  return UserModel.update({username: username}, update).exec();
+function addTicket(username, ticket) {
+  return UserModel.updateOne({username: username}, {$push: {tickets: ticket}}).exec();
 }
+
+function deleteTicket(username, ticketId) {
+  return UserModel.updateOne({username: username}, {$pull: {tickets: {_id: ticketId}}}).exec(); // if use ticket object (like push), it will delete based on
+}                                                                                               // ticket attributes, and will delete all same tickets
 
 // select all
 function getAllUsers() {
@@ -32,5 +36,6 @@ module.exports = {
   addUser,
   getUserByUserName,
   getAllUsers,
-  updateUser,
+  addTicket,
+  deleteTicket
 };

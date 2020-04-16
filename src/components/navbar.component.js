@@ -21,10 +21,10 @@ class CustomizedNavbar extends React.Component {
                   </Link>
               </li>
               <li class="nav-item">
-                <Link class="nav-link" >Premium Black</Link>
+                <Link class="nav-link" to={"/premium"}>Premium Black</Link>
               </li>
               <li class="nav-item">
-                <Link class="nav-link" >My Tickets</Link>
+                <Link class="nav-link" to={"/profile"}>My Tickets</Link>
               </li>
               <li class="nav-item">
                 <Link class="nav-link" to={"/login"}>Log in/Register</Link>

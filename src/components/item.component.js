@@ -1,17 +1,23 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
+import {chooseTicket} from '../actions/ticket.action';
 import LogoSmall from '../../public/assets/GH-01.jpg';
 import '../../public/style.css';
 
 class TicketItem extends React.Component {
 
+  processTime(rawTime) {
+    let s = new Date(rawTime);
+    let timeArr = s.toTimeString().split(" ")[0].split(":");
+    let res = timeArr[0] + ":" + timeArr[1];
+    return res;
+  }
+  
   concatDepDesTime() {
-    let start = new Date(this.props.info.depTime);
-    let end = new Date(this.props.info.arrTime);
-    let startTimeArr = start.toTimeString().split(" ")[0].split(":");
-    let startTime = startTimeArr[0] + ":" + startTimeArr[1];
-    let endTimeArr = end.toTimeString().split(" ")[0].split(":");
-    let endTime = endTimeArr[0] + ":" + endTimeArr[1];
+    let startTime = this.processTime(this.props.info.depTime);
+    let endTime = this.processTime(this.props.info.arrTime);
     return startTime + " - " + endTime;
   }
   
@@ -33,30 +39,56 @@ class TicketItem extends React.Component {
   }
   
   render() {
+    let processed = {
+      depCode: this.props.info.depCode,
+      arrCode: this.props.info.arrCode,
+      depTime: this.processTime(this.props.info.depTime),
+      arrTime: this.processTime(this.props.info.arrTime),
+      depAirport: this.props.info.depLocation,
+      arrAirport: this.props.info.arrLocation,
+      flightNumber: this.props.info.flightNumber,
+      aircraft: this.props.info.aircraft,
+      date: this.props.date,
+      price: this.generatePrice()
+    }
     return (
-      <div id="ticket-card" class="rounded">
-        <div class="row no-gutters">
-          <div class="col-md-2">
-            <img src={LogoSmall} class="card-img" alt="..." />
-          </div>
-          <div class="col-md-3">
-            <br></br>
-            <h5 class="card-title">{this.concatDepDesTime()}</h5>
-            <div class="card-text"><small class="text-muted">{this.props.info.flightNumber}</small></div>
-          </div>
-          <div class="col-md-5">
-            <br></br>
-            <h5 class="card-title">{this.concatDepDesLocation()}</h5>
-            <div class="card-text"><small class="text-muted">{this.concatDepDesCode()}</small></div>
-          </div>
-          <div class="col-md-2">
-            <br></br>
-            <h5 class="card-title">{this.generatePrice()}</h5>
+      <Link to={'/detail'} onClick={() => this.props.selectTicket(processed)}>
+        <div id="ticket-card" class="rounded">
+          <div class="row no-gutters">
+            <div class="col-md-2">
+              <img src={LogoSmall} class="card-img" alt="..." />
+            </div>
+            <div class="col-md-3">
+              <br></br>
+              <h5 class="card-title" id="info-text">{this.concatDepDesTime()}</h5>
+              <div class="card-text"><small class="text-muted">{this.props.info.flightNumber}</small></div>
+            </div>
+            <div class="col-md-5">
+              <br></br>
+              <h5 class="card-title" id="info-text">{this.concatDepDesLocation()}</h5>
+              <div class="card-text"><small class="text-muted">{this.concatDepDesCode()}</small></div>
+            </div>
+            <div class="col-md-2">
+              <br></br>
+              <h5 class="card-title" id="info-text">{processed.price}</h5>
+            </div>
           </div>
         </div>
-      </div>
+      </Link>
     )
   }
 }
 
-export default TicketItem;
+function mapDispatchToProps(dispatch) {
+  return {
+    selectTicket: (ticket) => dispatch(chooseTicket(ticket))
+  }
+}
+
+function mapStateToProps(state) {
+  return {
+    date: state.setSearch.date
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TicketItem);

@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken');
 
-// this will be used everywhere we want to check if auth is valid,
-// it basically looks at the token, and check if encoded info if valid,
-// if yes, it will pass along token and continue rest of logic
+// it feels like a switcher, to direct the call to login or continue
+// if continue, we put username into it so that username no need to be carried around
 
 module.exports = function(req, res, next) {
   const token = req.cookies.token;

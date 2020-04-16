@@ -19,6 +19,9 @@ html, body {
   padding-bottom: 10px;
 }
 
+/* #home-background {
+} */
+
 #background {
   height: 100vh;
   padding-top: 25%;
@@ -156,5 +159,80 @@ html, body {
 }
 
 #small-text {
+  color: #333333;
+}
+
+#info-text {
+  color: #333333;
+}
+
+#carouselExampleControls {
+  width: 80%;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.card-group {
+  width: 80%;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+#ad-image {
+  width: 80%;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+#ticket-detail {
+  width: 80%;
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-top: 20px;
+  box-shadow: 0 0 10px #b3b3b3;
+}
+
+#ticket-title-left {
+  display: inline-block;
+}
+
+#ticket-title-right {
+  display: inline-block;
+  text-align: end;
+}
+
+#purchase-button {
+  text-align: end;
+}
+
+#left-card {
+  border-width: 10px;
+  border-color: white;
+  border-left: 0px;
+}
+
+#central-card{
+  border-width: 10px;
+  border-color: white;
+}
+
+#right-card {
+  border-width: 10px;
+  border-color: white;
+  border-right: 0px;
+}
+
+#no-result {
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+#result-title {
+  margin-left: 20%;
+  color: #333333;
+}
+
+#user-result-title {
+  margin-left: 10%;
   color: #333333;
 }
