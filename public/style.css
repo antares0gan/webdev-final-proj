@@ -37,9 +37,8 @@ html, body {
 
 #ticket-card {
   z-index: 9999;
-  max-width: 800px;
-  margin-left: 20%;
-  margin-right: 20%;
+  margin-left: 10%;
+  margin-right: 10%;
   margin-top: 5px;
   margin-bottom: 5px;
   box-shadow: 0 0 10px #b3b3b3;
@@ -228,7 +227,7 @@ html, body {
 }
 
 #result-title {
-  margin-left: 20%;
+  margin-left: 10%;
   color: #333333;
 }
 

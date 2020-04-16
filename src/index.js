@@ -28,7 +28,7 @@ ReactDOM.render(
         <Route path="/result" component={SearchResult}/>
         <Route path="/login" component={UserLogin}/>
         <Route path="/register" component={Register}/>
-        <Route path="/detail" component={TicketDetail} />
+        <Route path="/detail" component={LoggedInComponent(TicketDetail)} />
         <Route path="/premium" component={PremiumBlack} />
         <Route path="/profile" component={LoggedInComponent(UserProfile)}/>
         <Redirect exact from="/" to="home"/>
