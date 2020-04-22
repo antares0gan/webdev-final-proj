@@ -32,7 +32,7 @@
     "uuid": "^7.0.2"
   },
   "scripts": {
-    "start": "run-p server devreact",
+    "start": "run-p devserver devreact",
     "devreact": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
