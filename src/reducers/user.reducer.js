@@ -49,7 +49,7 @@ function inFlight(state = false, action) {
 
 function redirect(state = '', action) {
   if (action.type === 'LOGIN_SUCCESS' || action.type === 'REGISTER_SUCCESS') {
-    return '/home/';
+    return '/home';
   }
   return '';
 }
