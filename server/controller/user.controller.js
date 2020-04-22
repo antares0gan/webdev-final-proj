@@ -7,7 +7,7 @@ const UserModel = require('../model/user.model');
 const jwt = require('jsonwebtoken');
 const authParser = require('../middleware/middleware_auth.middleware');
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const {username, password} = req.body;
   if(!username || !password) {
     return res.status(404).send({message: "Must include username AND password"});
@@ -15,18 +15,8 @@ router.post('/', (req, res) => {
   return UserModel.addUser(req.body)
     .then(
       (user) => {
-        // instead of response user info, we create a token with username,
-        // then we can use this token in request every time, by decoding
-        // and comparing with username from request, we know if it has auth
-        const payload = {username};
-        const token = jwt.sign(payload, process.env.REACT_APP_MY_SECRET, {
-          expiresIn: '14d' // optional cookie expiration date
-        });
-        // Here we are setting the cookie on our response obect.
-        // Note that we are returning the username, but that isn't as necessary anymore
-        // unless we want to reference that on the frontend
-        return res.cookie('token', token, {httpOnly: true})
-          .status(200).send({username});
+        req.session.username = username;
+        return res.status(200).send({username});
       },
       error => res.status(400).send("User already exist")   // most likely error, can be other reason in databse
     );
@@ -43,18 +33,8 @@ router.post('/authenticate', function (req, res) {
       }
       user.comparePassword(password, (error, match) => {
         if (match) {
-          const payload = {username};
-          // JWT is encrypting our payload (which is whatever data we want
-          // to carry across sessions: in this case, just the username)
-          // into the cookie based on our SECRET
-          const token = jwt.sign(payload, process.env.REACT_APP_MY_SECRET, {
-            expiresIn: '14d' // optional cookie expiration date
-          });
-          // Here we are setting the cookie on our response obect.
-          // Note that we are returning the username, but that isn't as necessary anymore
-          // unless we want to reference that on the frontend
-          return res.cookie('token', token, {httpOnly: true})
-            .status(200).send({username});
+          req.session.username = username;
+          return res.status(200).send({username});
         }
         return res.status(400).send("The password does not match");
       });
@@ -72,6 +52,24 @@ router.get('/', (req, res) => UserModel.getAllUsers()
 // login
 router.get('/loggedIn', authParser, function(req, res) {
   return res.sendStatus(200);
+})
+
+// GET /logout
+router.get('/logout', function(req, res) {
+  if (req.session) {
+    // delete session object
+    req.session.destroy();
+  }
+  return res.sendStatus(200);
+});
+
+router.get('/username', (req, res) => {
+  const username = req.session.username;
+  if (!username) {
+    res.status(200).send('');
+  } else {
+    res.status(200).send(username);
+  }
 })
 
 // to add ticket, ticket is an object

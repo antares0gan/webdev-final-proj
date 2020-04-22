@@ -21,6 +21,17 @@ const db = mongoose.connection;
 // to clean database, uncomment following line
 // db.dropDatabase();
 
+const session = require('express-session');
+//...
+// This will manage our sesssion data.
+// We can use our secret from our JWT tokens
+const MongoStore = require('connect-mongo')(session);
+    
+app.use(session({secret: process.env.REACT_APP_MY_SECRET,
+	store: new MongoStore({
+		mongooseConnection : db,
+	})}));
+
 // This will create the connection, and throw an error if it doesn't work
 db.on('error', console.error.bind(console, 'Error connecting to MongoDB:'));
 
