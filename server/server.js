@@ -27,7 +27,7 @@ const session = require('express-session');
 // We can use our secret from our JWT tokens
 const MongoStore = require('connect-mongo')(session);
     
-app.use(session({secret: process.env.REACT_APP_MY_SECRET,
+app.use(session({secret: "chrysanthemum_airline",
 	store: new MongoStore({
 		mongooseConnection : db,
 	})}));

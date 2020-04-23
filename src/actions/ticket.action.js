@@ -60,7 +60,7 @@ export function cleanRedirect() {
 export function getAPITickets(dep, arr) {
   return function (dispatch) {
     dispatch(inFlight()); // send request
-    return Axios.get(`http://api.aviationstack.com/v1/flights?access_key=${process.env.REACT_APP_API_KEY}&dep_iata=${dep}&arr_iata=${arr}`)
+    return Axios.get(`http://api.aviationstack.com/v1/flights?access_key=cd1488c8c3d61a93fc0479073425edc2&dep_iata=${dep}&arr_iata=${arr}`)
       .then(
         function(response) {
           let raw = response.data.data;
