@@ -74,7 +74,6 @@ export function register(username, password) {
     dispatch(registerAttempt());
     return Axios.post('/api/user/', {username, password})
       .then(response => {
-        console.dir(response.data);
         dispatch(registerSuccess(response.data.username))
         },
         error => {

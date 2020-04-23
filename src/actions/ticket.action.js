@@ -38,6 +38,20 @@ function receiveError() {
   }
 }
 
+function receiveDep(city) {
+  return {
+    type: "RECEIVE_DEP",
+    city
+  }
+}
+
+function receiveArr(city) {
+  return {
+    type: "RECEIVE_ARR",
+    city
+  }
+}
+
 export function chooseTicket(ticket) {
   return {
     type: "SELECT_TICKET",
@@ -57,32 +71,34 @@ export function cleanRedirect() {
   }
 }
 
+export function cleanCount() {
+  return {
+    type: "CLEAR_COUNT"
+  }
+}
+
 export function getAPITickets(dep, arr) {
   return function (dispatch) {
     dispatch(inFlight()); // send request
-    return Axios.get(`http://api.aviationstack.com/v1/flights?access_key=cd1488c8c3d61a93fc0479073425edc2&dep_iata=${dep}&arr_iata=${arr}`)
+    return Axios.get(`https://aviation-edge.com/v2/public/routes?key=05ef93-c88973&departureIata=${dep}&arrivalIata=${arr}&limit=20`)
       .then(
         function(response) {
-          let raw = response.data.data;
+          let raw = response.data;
           let result = [];
           if (typeof(raw) !== "undefined") {
             for (let i = 0; i < raw.length; i++) {
-              let craft = "TBD";
-              if (raw[i].aircraft !== null) {
-                craft = raw[i].aircraft.iata;
+              if (raw[i].departureTime && raw[i].arrivalTime) {
+                result.push(
+                  {
+                    depTime : raw[i].departureTime,
+                    arrTime : raw[i].arrivalTime,
+                    depCode : raw[i].departureIata,
+                    arrCode : raw[i].arrivalIata,
+                    flightNumber : "GH" + raw[i].flightNumber,
+                    aircraft: "TBD"
+                  }
+                )
               }
-              result.push(
-                {
-                  depTime : raw[i].departure.scheduled.split("+")[0],
-                  arrTime : raw[i].arrival.scheduled.split("+")[0],
-                  depCode : raw[i].departure.iata,
-                  arrCode : raw[i].arrival.iata,
-                  depLocation : raw[i].departure.airport,
-                  arrLocation : raw[i].arrival.airport,
-                  flightNumber : "GH" + raw[i].flight.number,
-                  aircraft: craft
-                }
-              )
             }
           }
           dispatch(receiveAPITickets(result)); // send response
@@ -92,6 +108,30 @@ export function getAPITickets(dep, arr) {
           dispatch(receiveError());
         }
       );
+  }
+}
+
+export function fetchDep(iataCode) {
+  return function(dispatch) {
+    dispatch(inFlight());
+    return Axios.get(`https://aviation-edge.com/v2/public/airportDatabase?key=05ef93-c88973&codeIataAirport=${iataCode}`)
+      .then(response => {
+        let raw = response.data;
+        dispatch(receiveDep(raw[0].nameAirport))
+      },
+      error => dispatch(receiveError()));
+  }
+}
+
+export function fetchArr(iataCode) {
+  return function(dispatch) {
+    dispatch(inFlight());
+    return Axios.get(`https://aviation-edge.com/v2/public/airportDatabase?key=05ef93-c88973&codeIataAirport=${iataCode}`)
+      .then(response => {
+        let raw = response.data;
+        dispatch(receiveArr(raw[0].nameAirport))
+      },
+      error => dispatch(receiveError()));
   }
 }
 

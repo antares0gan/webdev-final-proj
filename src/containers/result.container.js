@@ -15,7 +15,10 @@ class SearchResult extends React.Component {
   populateList() {
     let res = []
     for (let i=0; i<this.props.tickets.length; i++) {
-      res.push(<TicketItem info={this.props.tickets[i]} />)
+      let info = this.props.tickets[i];
+      info.depLocation = this.props.depCity;
+      info.arrLocation = this.props.arrCity;
+      res.push(<TicketItem info={info} />)
     }
     if (res.length === 0) {
       return (
@@ -45,6 +48,8 @@ class SearchResult extends React.Component {
 function mapStateToProps(state, props) {
   return {
     tickets: state.ticket.apiTickets,
+    depCity: state.ticket.city.dep,
+    arrCity: state.ticket.city.arr
   }
 }
 

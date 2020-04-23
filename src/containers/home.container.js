@@ -5,7 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { setDep, setDes, setDate } from '../actions/search.action';
-import { getAPITickets } from '../actions/ticket.action';
+import { getAPITickets, fetchArr, fetchDep, cleanCount } from '../actions/ticket.action';
 import CustomizedNavbar from '../components/navbar.component';
 import Loader from '../components/loading.component';
 import '../../public/style.css';
@@ -43,12 +43,15 @@ class HomePage extends React.Component {
   }
 
   handleSubmit(event) {
+    this.props.fetchDep(this.props.dep);
+    this.props.fetchArr(this.props.des);
     this.props.fetchTickets(this.props.dep, this.props.des);
     event.preventDefault();
   }
   
   render() {
-    if (this.props.redirect) {
+    if (this.props.redirect && this.props.count === 3) {
+      this.props.cleanCount();
       return (<Redirect to={this.props.redirect}/>)
     }
     if (this.props.loading) {
@@ -143,7 +146,10 @@ function mapDispatchToProps(dispatch) {
     setDep: (dep) => dispatch(setDep(dep)),
     setDes: (des) => dispatch(setDes(des)),
     setDate: (date) => dispatch(setDate(date)),
-    fetchTickets: (dep, des) => dispatch(getAPITickets(dep, des))
+    fetchTickets: (dep, des) => dispatch(getAPITickets(dep, des)),
+    fetchDep: (iataCode) => dispatch(fetchDep(iataCode)),
+    fetchArr: (iataCode) => dispatch(fetchArr(iataCode)),
+    cleanCount: () => dispatch(cleanCount())
   }
 }
 
@@ -153,7 +159,8 @@ function mapStateToProps(state) {
     des: state.setSearch.des,
     loading: state.ticket.inFlight,
     error: state.ticket.isError,
-    redirect: state.ticket.redirect
+    redirect: state.ticket.redirect,
+    count: state.ticket.count
   }
 }
 

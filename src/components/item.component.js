@@ -9,8 +9,7 @@ import '../../public/style.css';
 class TicketItem extends React.Component {
 
   processTime(rawTime) {
-    let s = new Date(rawTime);
-    let timeArr = s.toTimeString().split(" ")[0].split(":");
+    let timeArr = rawTime.split(":");
     let res = timeArr[0] + ":" + timeArr[1];
     return res;
   }

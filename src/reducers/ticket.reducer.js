@@ -72,6 +72,30 @@ function selectTicket(state = {
   return state
 }
 
+function count(state = 0, action) {
+  switch (action.type) {
+    case "RECEIVE_API_TICKETS":
+    case "RECEIVE_DEP":
+    case "RECEIVE_ARR":
+      return state + 1;
+    case "CLEAR_COUNT":
+      return 0;
+    default:
+      return state;
+  }
+}
+
+function city(state = {dep:"", arr:""}, action) {
+  switch (action.type) {
+    case "RECEIVE_DEP":
+      return Object.assign({}, state, {dep: action.city});
+    case "RECEIVE_ARR":
+      return Object.assign({}, state, {arr: action.city});
+    default:
+      return state;
+  }
+}
+
 export default combineReducers({
   inFlight,
   userTickets,
@@ -79,5 +103,7 @@ export default combineReducers({
   isError,
   selectTicket,
   redirect,
-  refresh
+  refresh,
+  count,
+  city
 });
